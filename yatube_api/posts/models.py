@@ -4,8 +4,21 @@ from django.db import models
 User = get_user_model()
 
 
+class Group(models.Model):
+    title = models.CharField("Наименование группы", max_length=200)
+    slug = models.SlugField("Часть URL группы", unique=True)
+    description = models.TextField("Описание группы")
+
+    class Meta:
+        verbose_name = "Группа"
+        verbose_name_plural = "Группы"
+
+    def __str__(self):
+        return self.title
+
+
 class Post(models.Model):
-    text = models.TextField()
+    text = models.TextField("Текст поста")
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts')
@@ -15,12 +28,36 @@ class Post(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        verbose_name = "Пост"
+        verbose_name_plural = "Посты"
+
 
 class Comment(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField()
+    text = models.TextField("Текст комментария")
     created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+        "Дата добавления", auto_now_add=True, db_index=True)
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follower",
+        verbose_name="Пользователь",
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="following",
+        verbose_name="Автор",
+    )
+
+    class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+        unique_together = ["user", "author"]
