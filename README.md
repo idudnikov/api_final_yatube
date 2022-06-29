@@ -8,7 +8,7 @@
 
 Клонируйте файлы проекта в локальное хранилище и перейдите в папку с проектом:
 
-`git clone https://github.com/GeneralMinimus/api_final_yatube.git`
+`git clone https://github.com/idudnikov/api_final_yatube.git`
 
 `cd api_final_yatube`
 
